@@ -31,23 +31,58 @@ export default class Environment {
             emissiveIntensity: 0.2,
         });
 
+        const stairMaterial = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            roughness: 0.9,
+            metalness: 0,
+        });
+
+        const wallMaterial = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0,
+        });
+
         environmentScene.traverse((child) => {
             if (child.isMesh) {
                 if (child.name.includes('floor') || child.name.includes('Plane')) {
                     child.material = snowMaterial;
                 }
+            }     
+        });
+
+        environmentScene.traverse((child) => {
+            if (child.isMesh) {
+                if (child.name.includes('stairs')) {
+                    child.material = stairMaterial;
+                }
             }
         });
+
+        environmentScene.traverse((child) => {
+            if (child.isMesh) {
+                if (child.name.includes('walls')) {
+                    child.material = wallMaterial;
+                }
+            }
+        })
 
         environmentScene.position.set(-4.8, 0, -7.4);
         environmentScene.rotation.set(0, -0.60, 0);
         environmentScene.scale.setScalar(1.3);
 
-        const physicalObjects = ['floor'];
+        const physicalObjects = [
+            'floor',
+            'stairs',
+            'walls',
+        ];
 
         const shadowCasters = [];
 
-        const shadowReceivers = ['floor'];
+        const shadowReceivers = [
+            'floor',
+            'stairs',
+        ];
 
         for (const child of environmentScene.children) {
             child.traverse((obj) => {
